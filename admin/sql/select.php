@@ -23,7 +23,7 @@ function get_sales_by_date($start_date, $end_date){
 function get_buys_by_date($start_date, $end_date){
     global $wpdb;
 
-    $query = "SELECT date_created, concept, units, price, iva, shipping_total, proveedor 
+    $query = "SELECT date_created, concept, num_items, price, iva, shipping_total, proveedor 
               FROM {$wpdb->prefix}buys WHERE DATE(date_created) 
               BETWEEN '$start_date' AND '$end_date'";
     
@@ -59,7 +59,7 @@ function get_history_reports_by_date($start_date, $end_date){
 function get_all_buys(){
     global $wpdb;
 
-    $query = "SELECT date_created, concept, units, price, iva, shipping_total, proveedor 
+    $query = "SELECT date_created, concept, num_items, price, iva, shipping_total, proveedor 
               FROM {$wpdb->prefix}buys";
     
     $result = $wpdb->get_results($query, ARRAY_A);

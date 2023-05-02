@@ -69,7 +69,7 @@ function insert_buy($date, $product, $num_items, $price, $iva, $envio, $proveedo
 		'date_created' => $date,
         'concept' => $product,
 		'price' => $price,
-        'units' => $num_items,
+        'num_items' => $num_items,
         'proveedor' => $proveedor,
         'iva' => $iva,
         'shipping_total' => $envio

@@ -8,7 +8,7 @@ if(!empty($result)){
 
     foreach ($result as $key => $value) {
         $precio = number_format($value['price'],2);
-        $num_items = $value['units'];
+        $num_items = $value['num_items'];
         $total_buy = $precio * $num_items;
        
         $iva = number_format($value['iva'], 2);
