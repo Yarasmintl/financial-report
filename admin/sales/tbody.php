@@ -33,7 +33,7 @@ if(!empty($result)){
 <?php
         $cont = $cont + 1;
 
-        $row_sale = create_array_sales($date, $concepto, $precio, $num_items, $iva, $shipping, $subtotal);
+        $row_sale = create_array_sales($date, $concepto, $precio, $num_items, $iva, $shipping, $subtotal, $user);
         
         session_start();
         array_push($_SESSION['sales'], $row_sale);

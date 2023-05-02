@@ -36,7 +36,7 @@
     }
 
     
-    function create_array_sales($date, $concepto, $precio, $num_items, $iva, $shipping, $subtotal){
+    function create_array_sales($date, $concepto, $precio, $num_items, $iva, $shipping, $subtotal, $user){
         $row = array(
             'date_created' => $date,
             'post_name' => $concepto,
@@ -45,7 +45,8 @@
             'iva' => $iva,
             'shipping' => $shipping,
             'total_sale' => $subtotal,
-        );
+            'user' => $user
+        ); 
 
         return $row;
     }
