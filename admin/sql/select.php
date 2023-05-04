@@ -20,12 +20,70 @@ function get_sales_by_date($start_date, $end_date){
     return $result;
 }
 
+
+function get_sales_by_month_year($month, $year){
+
+    global $wpdb;
+        
+    $query = "SELECT SUM(order_product.product_net_revenue) AS total_net_sales, order_product.date_created
+              FROM {$wpdb->prefix}wc_order_product_lookup AS order_product 
+              INNER JOIN {$wpdb->prefix}wc_order_stats AS sale ON order_product.order_id = sale.order_id 
+              WHERE MONTH(order_product.date_created) = $month 
+              AND YEAR(order_product.date_created) = $year 
+              AND sale.status = 'wc-completed' 
+              GROUP BY order_product.order_id";
+
+    $result = $wpdb->get_results($query, ARRAY_A);
+    
+    return $result;
+}
+
+
+function get_sales_group_by_order(){
+    global $wpdb;
+        
+    $query = "SELECT SUM(order_product.product_net_revenue) AS total_net_sales, order_product.date_created
+              FROM {$wpdb->prefix}wc_order_product_lookup AS order_product 
+              INNER JOIN {$wpdb->prefix}wc_order_stats AS sale ON order_product.order_id = sale.order_id 
+              WHERE sale.status = 'wc-completed' 
+              GROUP BY order_product.order_id";
+
+    $result = $wpdb->get_results($query, ARRAY_A);
+    
+    return $result;
+}
+
+
 function get_buys_by_date($start_date, $end_date){
     global $wpdb;
 
     $query = "SELECT date_created, concept, num_items, price, iva, shipping_total, proveedor 
               FROM {$wpdb->prefix}buys WHERE DATE(date_created) 
               BETWEEN '$start_date' AND '$end_date'";
+    
+    $result = $wpdb->get_results($query, ARRAY_A);
+    
+    return $result;
+}
+
+function get_buys_by_month_year($month, $year){
+    global $wpdb;
+
+    $query = "SELECT date_created, SUM((num_items * price) + iva + shipping_total) AS total_net_buys
+              FROM {$wpdb->prefix}buys WHERE MONTH(date_created) = $month 
+              AND YEAR(date_created) = $year GROUP BY proveedor";
+    
+    $result = $wpdb->get_results($query, ARRAY_A);
+    
+    return $result;
+}
+
+
+function get_buys_group_by_proveedor_date(){
+    global $wpdb;
+
+    $query = "SELECT date_created, SUM((num_items * price) + iva + shipping_total) AS total_net_buys
+              FROM {$wpdb->prefix}buys GROUP BY proveedor, DATE(date_created)";
     
     $result = $wpdb->get_results($query, ARRAY_A);
     
@@ -77,7 +135,7 @@ function get_sales_completed(){
               FROM {$wpdb->prefix}wc_order_stats AS sale
               INNER JOIN {$wpdb->prefix}wc_order_product_lookup AS order_product
               ON sale.order_id = order_product.order_id 
-              INNER  JOIN {$wpdb->prefix}posts as product 
+              INNER  JOIN {$wpdb->prefix}posts AS product 
               ON order_product.product_id = product.ID
               AND sale.status='wc-completed'";
 

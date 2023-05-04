@@ -23,10 +23,35 @@
 <div class="tablenav top">	
     <div class="alignleft actions bulkactions"> 
         <form method="post" action="#">
-            <label class="labels">Fecha de inicio:</label>
-            <input type="date" id="inicio" name="inicio">
-            <label class="labels left">Fecha de fin:</label>
-            <input type="date" id="fin" name="fin">                
+            <select name="inicio">
+                <?php
+                $months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 
+                            'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+                    for($i=1; $i<=12; $i++) {
+
+                        $i = str_pad($i, 2, "0", STR_PAD_LEFT);
+
+                        if ($i == date('m')){
+                            
+                            echo '<option value="'.$i.'" selected>'.$months[($i-1)].'</option>';
+                        }
+                        else{
+                            echo '<option value="'.$i.'">'.$months[($i-1)].'</option>';
+                        }
+                    }
+                ?>
+            </select>
+
+            <select name="fin">
+                <?php
+                    for($i=date('o'); $i>=1910; $i--){
+                        if ($i == date('o'))
+                            echo '<option value="'.$i.'" selected>'.$i.'</option>';
+                        else
+                            echo '<option value="'.$i.'">'.$i.'</option>';
+                    }
+                ?>
+            </select>               
             <input type="submit" onfocus="validateDate()" name="option" class="button action" value="Filtrar">
             <input type="submit" name="all" class="button action left" value="Mostrar todo">
             <input type="submit" name="pdf" class="button action" value="Descargar PDF">

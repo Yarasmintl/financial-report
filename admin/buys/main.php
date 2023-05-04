@@ -27,7 +27,7 @@
                     global $folio;
                     $folio = generate_report_folio($last_folio_number, $prefix);
                     generate_pdf($folio, $_SESSION['buy_head'], $_SESSION['buys']);
-                    insert_folio_in_history($folio, $type, $_SESSION['buys']);       
+                    //insert_folio_in_history($folio, $type, $_SESSION['buys']);       
                 }
                 else
                 {

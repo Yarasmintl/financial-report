@@ -1,31 +1,57 @@
 <?php
-if(!empty($result)){     
-    $cont = 1;
-    
+    $cont_sales = 0;
+
     session_start();
     $_SESSION['utilities'] = array();
     $array_date = array();
 
-    foreach ($result as $key => $value) {
-        $date = convert_to_date_format($value['date_created']);
-        $type = $value['report_type'];
-        $folio = $value['folio'];
-        $total = $value['total'];
+    foreach ($res_sales as $key => $sales) {
+    
+        $subtotal_sales = $sales['total_net_sales'];        
+        $date_sales = convert_to_date_format($sales['date_created']);
+        $operation_sale = "Venta";
 
-        array_push($array_date, $date);
+        array_push($array_date, $date_sales);
+
+        $folio_sales = generate_report_folio($cont_sales, "V");
+    ?>
+        <tr>
+            <td><?php echo $folio_sales ?></td>
+            <td><?php echo $operation_sale ?></td>
+            <td><?php echo $date_sales ?></td>
+            <td><?php echo "$ ".number_format($subtotal_sales, 2) ?></td>
+        </tr>
+    
+<?php
+        $cont_sales = $cont_sales + 1;
+
+        $row_sale = create_array_utilities($folio_sales, $operation_sale, $date_sales, $subtotal_sales);
+        session_start();
+        array_push($_SESSION['utilities'], $row_sale);
+
+    }
+
+    $cont_buys = 0;
+
+    foreach ($res_buys as $key => $buys) {
+        $subtotal_buys = $buys['total_net_buys'];        
+        $date_buys = convert_to_date_format($buys['date_created']);
+        $operation_buy = "Compra";
+
+        array_push($array_date, $date_buys);
+        $folio_buys = generate_report_folio($cont_buys, "C");
 ?>
     <tr>
-        <td><?php echo $cont ?></td>
-        <td><?php echo $date ?></td>
-        <td><?php echo ucfirst($type) ?></td>
-        <td><?php echo $folio ?></td>
-        <td><?php echo "$ ".number_format($total, 2) ?></td>
+        <td><?php echo $folio_buys ?></td>
+        <td><?php echo $operation_buy ?></td>
+        <td><?php echo $date_buys ?></td>
+        <td><?php echo "$ ".number_format($subtotal_buys, 2) ?></td>
     </tr>
+    
 <?php
-        $cont = $cont + 1;
+        $cont_buys = $cont_buys + 1;
 
-        $row_buy = create_array_utilities($date, $type, $folio, $total);
-        
+        $row_buy = create_array_utilities($folio_buys, $operation_buy,  $date_buys, $subtotal_buys);
         session_start();
         array_push($_SESSION['utilities'], $row_buy);
     }
@@ -37,8 +63,4 @@ if(!empty($result)){
     $row_head = create_array_data_head($date_start, $date_end, $operacion);
     $_SESSION['utility_head'] = array();
     array_push($_SESSION['utility_head'], $row_head);
-       
-?>
-<?php
-}
 ?>

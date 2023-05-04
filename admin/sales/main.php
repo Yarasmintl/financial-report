@@ -26,8 +26,7 @@
                     $last_folio_number = explode_folio(get_last_folio_by_type($type));
                     global $folio;
                     $folio = generate_report_folio($last_folio_number, $prefix);
-                    generate_pdf($folio, $_SESSION['sale_head'], $_SESSION['sales']);
-                    insert_folio_in_history($folio, $type, $_SESSION['sales']);                    
+                    generate_pdf($folio, $_SESSION['sale_head'], $_SESSION['sales']);                    
                 }
                 else
                 {

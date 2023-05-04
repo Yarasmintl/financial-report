@@ -18,7 +18,7 @@
     
     function generate_report_folio($last_number, $prefix){
         $new_number = $last_number + 1;
-        $number_folio = str_pad($new_number, 7, "0", STR_PAD_LEFT);
+        $number_folio = str_pad($new_number, 3, "0", STR_PAD_LEFT);
         $folio = $prefix.'-'.$number_folio;
     
         return $folio;
@@ -50,12 +50,12 @@
 
         return $row;
     }
-    function create_array_utilities($date, $type, $folio, $total){
+    function create_array_utilities($folio, $operation, $date, $subtotal){
         $row = array(
-            'date_created' => $date,
-            'type' => $type,
             'folio' => $folio,
-            'total' => $total,
+            'type' => $operation,
+            'date_created' => $date,
+            'subtotal' => $subtotal,
         );
 
         return $row;

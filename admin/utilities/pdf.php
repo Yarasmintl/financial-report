@@ -56,55 +56,56 @@ class PDF extends FPDF {
         $this->SetFillColor(232,232,232);
         $this->SetFont('Helvetica','B',8);
         $this->Cell(20);
+        $this->Cell(30,6,'FOLIO',1,0,'C',1);
+        $this->Cell(50,6,utf8_decode('OPERACIÓN'),1,0,'C',1);
         $this->Cell(30,6,'FECHA',1,0,'C',1);
-        $this->Cell(50,6,utf8_decode('FOLIO DE OPERACIÓN'),1,0,'C',1);
-        $this->Cell(30,6,'CONCEPTO',1,0,'C',1);
-        $this->Cell(40,6,'SUBTOTALES',1,1,'C',1);
+        $this->Cell(40,6,'TOTAL',1,1,'C',1);
         $this->SetFont('Helvetica','',8);  
 
         $tot_buy = 0;
         $tot_sale = 0;
-        $code_rv = '';
-        $code_rc = '';
         foreach ($result as $key => $value) {
             $this->Cell(20);
+            $this->Cell(30,6,$value['folio'],1,0,'C');
+            $this->Cell(50,6,$value['type'],1,0,'C');
             $this->Cell(30,6,$value['date_created'],1,0,'C');
-            $this->Cell(50,6,$value['folio'],1,0,'C');
-            $this->Cell(30,6,ucfirst($value['type']),1,0,'C');
-            $this->Cell(40,6,"$ ".number_format($value['total'], 2),1,1,'L');
+            $this->Cell(40,6,"$ ".number_format($value['subtotal'], 2),1,1,'L');
 
-            if($value['type']=='compra'){
-                $tot_buy = $value['total'];
-                $code_rc = explode_folio($value['folio']);
-           
+            if($value['type']=='Compra'){
+                $tot_buy = $tot_buy + $value['subtotal'];           
             }
-            else if($value['type']=='venta'){
-                $tot_sale = $value['total'];
-                $code_rv = explode_folio($value['folio']);
+            else if($value['type']=='Venta'){
+                $tot_sale = $tot_sale + $value['subtotal'];
             }
 
         }
+        $total_net = $tot_sale - $tot_buy;
 
-        if($code_rc == $code_rv){
-            $total_net = $tot_sale - $tot_buy;
-            $porcentaje = ($total_net / $tot_sale)*100;
-            $this->Ln(10);
-            $this->Cell(90);
-            $this->SetFillColor(232,232,232);
-            $this->SetFont('Helvetica','B',8);
-            $this->Cell(40,6,'UTILIDAD BRUTA ($): ',1,0,'L',1);
-            $this->SetFont('Helvetica','',8);
-            $this->Cell(40,6,"$ ".number_format($total_net , 2),1,0,'L');
-            $this->Ln(6);
-            $this->Cell(90);
-            $this->SetFont('Helvetica','B',8);
-            $this->Cell(40,6,'UTILIDAD BRUTA (%): ',1,0,'L',1);
-            $this->SetFont('Helvetica','',8);
-            $this->Cell(40,6,"% ".number_format($porcentaje, 2),1,0,'L');
-     
-        }
+        $iva_sale = $tot_sale * 0.16;
+        $iva_buy = $tot_buy * 0.16;
+
+        $this->Ln(6);
+        $this->Cell(130);
+        $this->SetFont('Helvetica','',8);
+        $this->Cell(40,6,"Total de ventas: $ ".number_format($tot_sale, 2),0,0,'R',0);
+        $this->Ln(3);
+       
+        $this->Cell(130);
+        $this->Cell(40,6,"IVA (16%): $ ".number_format($iva_sale, 2),0,0,'R',0);
+        $this->Ln(6);
+
+        $this->Cell(130);
+        $this->Cell(40,6,"Total de compras: $ ".number_format($tot_buy, 2),0,0,'R',0);
+        $this->Ln(3);
+       
+        $this->Cell(130);
+        $this->Cell(40,6,"IVA (16%): $ ".number_format($iva_buy, 2),0,0,'R',0);
+        $this->Ln(6);
+
+        $this->Cell(130);
+        $this->SetFont('Helvetica','B',8);
+        $this->Cell(40,6,'Utilidad Bruta ($): '.number_format($total_net , 2),0,0,'R',0);
     }
-    
     
 }
 
