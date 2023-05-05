@@ -46,8 +46,5 @@ if(!empty($result)){
     $row_head = create_array_data_head($date_start, $date_end, $operacion);
     $_SESSION['sale_head'] = array();
     array_push($_SESSION['sale_head'], $row_head);
-       
-?>
-<?php
 }
 ?>
