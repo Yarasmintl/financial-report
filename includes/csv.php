@@ -24,8 +24,19 @@
         );
     
         fputcsv($salida, $headers);
+
+        $net_total = 0;
+        $iva_total = 0;
+        $shipping_total = 0;
+        $subtotal = 0;
         
         foreach ($_SESSION['sales'] as $key => $value) {
+
+            $net_total = $net_total + $value['total_sale'];
+            $iva_total = $iva_total + $value['iva'];
+            $shipping_total = $shipping_total + $value['shipping'];
+            $subtotal = ($net_total - $iva_total) - $shipping_total;
+
             fputcsv($salida, array(
                 $value['date_created'],
                 $value['post_name'],
@@ -37,6 +48,29 @@
                 $value['user']
             ));
         }
+        fputcsv($salida, array(
+            ''
+        ));
+        fputcsv($salida, array(
+            '', '', '', '', '', '',
+            'Subtotal de ventas:',
+            $subtotal,
+        ));
+        fputcsv($salida, array(
+            '', '', '', '', '', '',
+            'IVA(16%):',
+            $iva_total,
+        ));
+        fputcsv($salida, array(
+            '', '', '', '', '', '',
+            'Envios:',
+            $shipping_total,
+        ));
+        fputcsv($salida, array(
+            '', '', '', '', '', '',
+            'Total de ventas:',
+            $net_total,
+        ));
     }
     elseif($title=='Compras'){
         foreach($_SESSION["buy_head"] as $key => $value){
@@ -55,14 +89,25 @@
             'Precio',
             'Unidades',
             'IVA',
-            'Envío',
+            'Envio',
             'Subtotal',
             'Proveedor'
         );
     
         fputcsv($salida, $headers);
+
+        $net_total = 0;
+        $iva_total = 0;
+        $shipping_total = 0;
+        $subtotal = 0;
         
         foreach ($_SESSION['buys'] as $key => $value) {
+
+            $net_total = $net_total + $value['total_buy'];
+            $iva_total = $iva_total + $value['iva'];
+            $shipping_total = $shipping_total + $value['shipping'];
+            $subtotal = ($net_total - $iva_total) - $shipping_total;
+
             fputcsv($salida, array(
                 $value['date_created'],
                 $value['concept'],
@@ -74,6 +119,31 @@
                 $value['proveedor']
             ));
         }
+
+        fputcsv($salida, array(
+            ''
+        ));
+        fputcsv($salida, array(
+            '', '', '', '', '', '',
+            'Subtotal de compras:',
+            $subtotal,
+        ));
+        fputcsv($salida, array(
+            '', '', '', '', '', '',
+            'IVA(16%):',
+            $iva_total,
+        ));
+        fputcsv($salida, array(
+            '', '', '', '', '', '',
+            'Envios:',
+            $shipping_total,
+        ));
+        fputcsv($salida, array(
+            '', '', '', '', '', '',
+            'Total de compras:',
+            $net_total,
+        ));
+    
     }else{
         foreach($_SESSION["utility_head"] as $key => $value){
             $start = $value['start'];
@@ -125,30 +195,22 @@
             ''
         ));
         fputcsv($salida, array(
-            '',
-            '',
-            '',
+            '','','',
             'Total ventas:',
             $tot_sale,
         ));
         fputcsv($salida, array(
-            '',
-            '',
-            '',
+            '','','',
             'IVA(16%):',
             $iva_sale,
         ));
         fputcsv($salida, array(
-            '',
-            '',
-            '',
+            '','','',
             'Total compras:',
             $tot_buy,
         ));
         fputcsv($salida, array(
-            '',
-            '',
-            '',
+            '','','',
             'IVA(16%):',
             $iva_buy,
         ));
