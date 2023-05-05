@@ -92,15 +92,11 @@
 
 
     function get_min_date_sales(array $dates = []){
-        if(!empty($date)){
-            return min($dates);
-        }       
+        return min($dates);     
     }
     
     
     function get_max_date_sales(array $dates = []){
-        if(!empty($date)){
-            return max($dates);
-        }             
+        return max($dates);             
     }
 ?>

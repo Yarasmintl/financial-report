@@ -1,4 +1,5 @@
 <?php
+if(!empty($res_sales) || !empty($res_buys)){
     $cont_sales = 0;
 
     session_start();
@@ -68,4 +69,5 @@
     $row_head = create_array_data_head($date_start, $date_end, $operacion);
     $_SESSION['utility_head'] = array();
     array_push($_SESSION['utility_head'], $row_head);
+}
 ?>
