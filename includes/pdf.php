@@ -99,7 +99,7 @@ class PDF extends FPDF {
         $this->Ln(6);
 
         $this->Cell(154);
-        $this->Cell(40,6,"Total de venta: $ ".number_format($net_total, 2),0,0,'R',0);
+        $this->Cell(40,6,"Total de ventas: $ ".number_format($net_total, 2),0,0,'R',0);
         $this->Ln(6);
     }
     
@@ -139,7 +139,7 @@ class PDF extends FPDF {
         $this->Ln(6);
         $this->Cell(154);
         $this->SetFont('Helvetica','',8);
-        $this->Cell(40,6,"Subtotal de ventas: $ ".number_format($subtotal, 2),0,0,'R',0);
+        $this->Cell(40,6,"Subtotal de compras: $ ".number_format($subtotal, 2),0,0,'R',0);
         $this->Ln(3);
        
         $this->Cell(154);
@@ -151,7 +151,7 @@ class PDF extends FPDF {
         $this->Ln(6);
 
         $this->Cell(154);
-        $this->Cell(40,6,"Total de venta: $ ".number_format($net_total, 2),0,0,'R',0);
+        $this->Cell(40,6,"Total de compras: $ ".number_format($net_total, 2),0,0,'R',0);
         $this->Ln(6);
 
     }
