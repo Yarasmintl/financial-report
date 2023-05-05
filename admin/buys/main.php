@@ -22,12 +22,11 @@
                     session_start();
                     ob_clean();
                     $type = 'compra';
-                    $prefix = 'RC';
-                    $last_folio_number = explode_folio(get_last_folio_by_type($type));
+                    $prefix = 'C';
+                    $last_folio_number = 0;
                     global $folio;
                     $folio = generate_report_folio($last_folio_number, $prefix);
                     generate_pdf($folio, $_SESSION['buy_head'], $_SESSION['buys']);
-                    //insert_folio_in_history($folio, $type, $_SESSION['buys']);       
                 }
                 else
                 {

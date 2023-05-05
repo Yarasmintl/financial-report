@@ -6,10 +6,11 @@
     $array_date = array();
 
     foreach ($res_sales as $key => $sales) {
-    
+        
         $subtotal_sales = $sales['total_net_sales'];        
         $date_sales = convert_to_date_format($sales['date_created']);
         $operation_sale = "Venta";
+        $iva_sales = $sales['iva'];
 
         array_push($array_date, $date_sales);
 
@@ -20,12 +21,14 @@
             <td><?php echo $operation_sale ?></td>
             <td><?php echo $date_sales ?></td>
             <td><?php echo "$ ".number_format($subtotal_sales, 2) ?></td>
+            <td><?php echo "$ ".number_format($iva_sales, 2) ?></td>
+
         </tr>
     
 <?php
         $cont_sales = $cont_sales + 1;
 
-        $row_sale = create_array_utilities($folio_sales, $operation_sale, $date_sales, $subtotal_sales);
+        $row_sale = create_array_utilities($folio_sales, $operation_sale, $date_sales, $subtotal_sales, $iva_sales);
         session_start();
         array_push($_SESSION['utilities'], $row_sale);
 
@@ -37,6 +40,7 @@
         $subtotal_buys = $buys['total_net_buys'];        
         $date_buys = convert_to_date_format($buys['date_created']);
         $operation_buy = "Compra";
+        $iva_buys = $buys['iva'];
 
         array_push($array_date, $date_buys);
         $folio_buys = generate_report_folio($cont_buys, "C");
@@ -46,12 +50,13 @@
         <td><?php echo $operation_buy ?></td>
         <td><?php echo $date_buys ?></td>
         <td><?php echo "$ ".number_format($subtotal_buys, 2) ?></td>
+        <td><?php echo "$ ".number_format($iva_buys, 2) ?></td>
     </tr>
     
 <?php
         $cont_buys = $cont_buys + 1;
 
-        $row_buy = create_array_utilities($folio_buys, $operation_buy,  $date_buys, $subtotal_buys);
+        $row_buy = create_array_utilities($folio_buys, $operation_buy,  $date_buys, $subtotal_buys, $iva_buys);
         session_start();
         array_push($_SESSION['utilities'], $row_buy);
     }

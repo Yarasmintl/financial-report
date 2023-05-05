@@ -27,7 +27,7 @@
                     ob_clean();
                     $type = 'utilidad';
                     $prefix = 'RUB';
-                    $last_folio_number = explode_folio(get_last_folio_by_type($type));
+                    $last_folio_number = 0;
                     global $folio;
                     $folio = generate_report_folio($last_folio_number, $prefix);
                     generate_pdf($folio, $_SESSION['utility_head'], $_SESSION['utilities']);  

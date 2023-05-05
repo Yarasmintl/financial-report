@@ -50,12 +50,13 @@
 
         return $row;
     }
-    function create_array_utilities($folio, $operation, $date, $subtotal){
+    function create_array_utilities($folio, $operation, $date, $subtotal, $iva){
         $row = array(
             'folio' => $folio,
             'type' => $operation,
             'date_created' => $date,
             'subtotal' => $subtotal,
+            'iva' => $iva,
         );
 
         return $row;
@@ -88,7 +89,6 @@
 
         return $row;
     }
-
 
 
     function get_min_date_sales(array $dates = []){

@@ -8,7 +8,7 @@ function generate_pdf($folio, array $dates = [], array $result = []){
     $pdf->AliasNbPages();
     $pdf->AddPage();
     $pdf->headTable($folio, $dates);
-    if(str_starts_with($folio, 'RV')){
+    if(str_starts_with($folio, 'V')){
         $pdf->bodyTableSales($result);    
     }else{
         $pdf->bodyTableBuys($result);
@@ -67,8 +67,14 @@ class PDF extends FPDF {
         $this->SetFont('Helvetica','',8);  
 
         $net_total = 0;
+        $iva_total = 0;
+        $shipping_total = 0;
+        $subtotal = 0;
         foreach ($result as $key => $value) {
             $net_total = $net_total + $value['total_sale'];
+            $iva_total = $iva_total + $value['iva'];
+            $shipping_total = $shipping_total + $value['shipping'];
+            $subtotal = ($net_total - $iva_total) - $shipping_total;
 
             $this->Cell(20,6,$value['date_created'],1,0,'C');
             $this->Cell(50,6,utf8_decode($value['post_name']),1,0,'L');
@@ -78,49 +84,75 @@ class PDF extends FPDF {
             $this->Cell(26,6,"$ ".$value['shipping'],1,0,'L');
             $this->Cell(30,6,"$ ".number_format($value['total_sale'], 2),1,1,'L');
         }
-        $this->Ln(10);
-        $this->SetFont('Helvetica','B',8);
-        $this->Cell(149);
-        $this->SetFillColor(232,232,232);
-        $this->Cell(15,6,'TOTAL: ',1,0,'L',1);
+        $this->Ln(6);
+        $this->Cell(154);
         $this->SetFont('Helvetica','',8);
-        $this->Cell(30,6,"$ ".number_format($net_total, 2),1,0,'L');
+        $this->Cell(40,6,"Subtotal de ventas: $ ".number_format($subtotal, 2),0,0,'R',0);
+        $this->Ln(3);
+       
+        $this->Cell(154);
+        $this->Cell(40,6,"IVA (16%): $ ".number_format($iva_total, 2),0,0,'R',0);
+        $this->Ln(3);
+
+        $this->Cell(154);
+        $this->Cell(40,6,utf8_decode("Envíos: $ ").number_format($shipping_total, 2),0,0,'R',0);
+        $this->Ln(6);
+
+        $this->Cell(154);
+        $this->Cell(40,6,"Total de venta: $ ".number_format($net_total, 2),0,0,'R',0);
+        $this->Ln(6);
     }
     
     function bodyTableBuys(array $result = []){
         $this->Ln(10);
         $this->SetFillColor(232,232,232);
         $this->SetFont('Helvetica','B',8);
-        $this->Cell(20,6,'FECHA',1,0,'C',1);
+        $this->Cell(17,6,'FECHA',1,0,'C',1);
         $this->Cell(40,6,'CONCEPTO',1,0,'C',1);
-        $this->Cell(22,6,'PRECIO',1,0,'C',1);
+        $this->Cell(19,6,'PRECIO',1,0,'C',1);
         $this->Cell(20,6,'UNIDADES',1,0,'C',1);
         $this->Cell(21,6,'IVA',1,0,'C',1);
         $this->Cell(21,6,'ENVIO',1,0,'C',1);
         $this->Cell(21,6,'SUBTOTAL',1,0,'C',1);
-        $this->Cell(30,6,'PROVEEDOR',1,1,'C',1);
+        $this->Cell(35,6,'PROVEEDOR',1,1,'C',1);
         $this->SetFont('Helvetica','',8);  
 
         $net_total = 0;
+        $iva_total = 0;
+        $shipping_total = 0;
+        $subtotal = 0;
         foreach ($result as $key => $value) {
             $net_total = $net_total + $value['total_buy'];
+            $iva_total = $iva_total + $value['iva'];
+            $shipping_total = $shipping_total + $value['shipping'];
+            $subtotal = ($net_total - $iva_total) - $shipping_total;
 
-            $this->Cell(20,6,$value['date_created'],1,0,'C');
+            $this->Cell(17,6,$value['date_created'],1,0,'C');
             $this->Cell(40,6,utf8_decode($value['concept']),1,0,'L');
-            $this->Cell(22,6,"$ ".$value['price'],1,0,'L');
+            $this->Cell(19,6,"$ ".$value['price'],1,0,'L');
             $this->Cell(20,6,$value['num_items'],1,0,'C');
             $this->Cell(21,6,"$ ".$value['iva'],1,0,'L');
             $this->Cell(21,6,"$ ".$value['shipping'],1,0,'L');
             $this->Cell(21,6,"$ ".number_format($value['total_buy'], 2),1,0,'L');
-            $this->Cell(30,6,utf8_decode($value['proveedor']),1,1,'L');
+            $this->Cell(35,6,utf8_decode($value['proveedor']),1,1,'L');
         }
-        $this->Ln(10);
-        $this->SetFont('Helvetica','B',8);
-        $this->Cell(150);
-        $this->SetFillColor(232,232,232);
-        $this->Cell(15,6,'TOTAL: ',1,0,'L',1);
+        $this->Ln(6);
+        $this->Cell(154);
         $this->SetFont('Helvetica','',8);
-        $this->Cell(30,6,"$ ".number_format($net_total, 2),1,0,'L');
+        $this->Cell(40,6,"Subtotal de ventas: $ ".number_format($subtotal, 2),0,0,'R',0);
+        $this->Ln(3);
+       
+        $this->Cell(154);
+        $this->Cell(40,6,"IVA (16%): $ ".number_format($iva_total, 2),0,0,'R',0);
+        $this->Ln(3);
+
+        $this->Cell(154);
+        $this->Cell(40,6,utf8_decode("Envíos: $ ").number_format($shipping_total, 2),0,0,'R',0);
+        $this->Ln(6);
+
+        $this->Cell(154);
+        $this->Cell(40,6,"Total de venta: $ ".number_format($net_total, 2),0,0,'R',0);
+        $this->Ln(6);
 
     }
     

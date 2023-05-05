@@ -89,13 +89,16 @@
             'Folio',
             'Operación',
             'Fecha',
-            'Subtotales'
+            'Total',
+            'IVA Total',
         );
     
         fputcsv($salida, $headers);
 
         $tot_buy = 0;
         $tot_sale = 0;
+        $iva_sale = 0;
+        $iva_buy = 0;
         
         foreach ($_SESSION['utilities'] as $key => $value) {
             fputcsv($salida, array(
@@ -103,25 +106,26 @@
                 $value['folio'],
                 ucfirst($value['type']),
                 $value['subtotal'],
+                $value['iva'],
                
             ));
             if($value['type']=='Compra'){
-                $tot_buy = $tot_buy + $value['subtotal'];           
+                $tot_buy = $tot_buy + $value['subtotal'];  
+                $iva_buy = $iva_buy + $value['iva'];         
             }
             else if($value['type']=='Venta'){
                 $tot_sale = $tot_sale + $value['subtotal'];
+                $iva_sale = $iva_sale + $value['iva'];
             }
         }
 
         $total_net = $tot_sale - $tot_buy;
 
-        $iva_sale = $tot_sale * 0.16;
-        $iva_buy = $tot_buy * 0.16;
-
         fputcsv($salida, array(
             ''
         ));
         fputcsv($salida, array(
+            '',
             '',
             '',
             'Total ventas:',
@@ -130,16 +134,19 @@
         fputcsv($salida, array(
             '',
             '',
+            '',
             'IVA(16%):',
             $iva_sale,
         ));
         fputcsv($salida, array(
             '',
             '',
+            '',
             'Total compras:',
             $tot_buy,
         ));
         fputcsv($salida, array(
+            '',
             '',
             '',
             'IVA(16%):',

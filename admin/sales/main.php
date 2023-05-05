@@ -22,8 +22,8 @@
                     session_start();
                     ob_clean();
                     $type = 'venta';
-                    $prefix = 'RV';
-                    $last_folio_number = explode_folio(get_last_folio_by_type($type));
+                    $prefix = 'V';
+                    $last_folio_number = 0; 
                     global $folio;
                     $folio = generate_report_folio($last_folio_number, $prefix);
                     generate_pdf($folio, $_SESSION['sale_head'], $_SESSION['sales']);                    

@@ -25,7 +25,8 @@ function get_sales_by_month_year($month, $year){
 
     global $wpdb;
         
-    $query = "SELECT SUM(order_product.product_net_revenue) AS total_net_sales, order_product.date_created
+    $query = "SELECT SUM(order_product.product_net_revenue) AS total_net_sales, order_product.date_created,
+                     SUM(sale.tax_total) AS iva
               FROM {$wpdb->prefix}wc_order_product_lookup AS order_product 
               INNER JOIN {$wpdb->prefix}wc_order_stats AS sale ON order_product.order_id = sale.order_id 
               WHERE MONTH(order_product.date_created) = $month 
@@ -42,7 +43,8 @@ function get_sales_by_month_year($month, $year){
 function get_sales_group_by_order(){
     global $wpdb;
         
-    $query = "SELECT SUM(order_product.product_net_revenue) AS total_net_sales, order_product.date_created
+    $query = "SELECT SUM(order_product.product_net_revenue) AS total_net_sales, order_product.date_created, 
+                     SUM(sale.tax_total) as iva 
               FROM {$wpdb->prefix}wc_order_product_lookup AS order_product 
               INNER JOIN {$wpdb->prefix}wc_order_stats AS sale ON order_product.order_id = sale.order_id 
               WHERE sale.status = 'wc-completed' 
@@ -69,7 +71,7 @@ function get_buys_by_date($start_date, $end_date){
 function get_buys_by_month_year($month, $year){
     global $wpdb;
 
-    $query = "SELECT date_created, SUM((num_items * price) + iva + shipping_total) AS total_net_buys
+    $query = "SELECT date_created, SUM((num_items * price) + iva + shipping_total) AS total_net_buys, SUM(iva) AS iva
               FROM {$wpdb->prefix}buys WHERE MONTH(date_created) = $month 
               AND YEAR(date_created) = $year GROUP BY proveedor";
     
@@ -82,7 +84,7 @@ function get_buys_by_month_year($month, $year){
 function get_buys_group_by_proveedor_date(){
     global $wpdb;
 
-    $query = "SELECT date_created, SUM((num_items * price) + iva + shipping_total) AS total_net_buys
+    $query = "SELECT date_created, SUM((num_items * price) + iva + shipping_total) AS total_net_buys, SUM(iva) AS iva
               FROM {$wpdb->prefix}buys GROUP BY proveedor, DATE(date_created)";
     
     $result = $wpdb->get_results($query, ARRAY_A);
@@ -185,13 +187,6 @@ function get_customers_data(){
     $result = $wpdb->get_results($query, ARRAY_A);
 
     return $result;
-}
-
-function get_last_folio_by_type($type){
-    global $wpdb;
-    $query = $wpdb->get_row("SELECT folio FROM {$wpdb->prefix}history_reports where report_type = '$type'
-                            ORDER BY folio DESC LIMIT 1", ARRAY_A);
-    return $query['folio'];
 }
 
 ?>

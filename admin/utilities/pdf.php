@@ -57,32 +57,37 @@ class PDF extends FPDF {
         $this->SetFont('Helvetica','B',8);
         $this->Cell(20);
         $this->Cell(30,6,'FOLIO',1,0,'C',1);
-        $this->Cell(50,6,utf8_decode('OPERACIÓN'),1,0,'C',1);
+        $this->Cell(30,6,utf8_decode('OPERACIÓN'),1,0,'C',1);
         $this->Cell(30,6,'FECHA',1,0,'C',1);
-        $this->Cell(40,6,'TOTAL',1,1,'C',1);
+        $this->Cell(35,6,'TOTAL',1,0,'C',1);
+        $this->Cell(25,6,'IVA TOTAL',1,1,'C',1);
         $this->SetFont('Helvetica','',8);  
 
         $tot_buy = 0;
         $tot_sale = 0;
+
+        $iva_sale = 0;
+        $iva_buy = 0;
         foreach ($result as $key => $value) {
             $this->Cell(20);
             $this->Cell(30,6,$value['folio'],1,0,'C');
-            $this->Cell(50,6,$value['type'],1,0,'C');
+            $this->Cell(30,6,$value['type'],1,0,'C');
             $this->Cell(30,6,$value['date_created'],1,0,'C');
-            $this->Cell(40,6,"$ ".number_format($value['subtotal'], 2),1,1,'L');
+            $this->Cell(35,6,"$ ".number_format($value['subtotal'], 2),1,0,'L');
+            $this->Cell(25,6,"$ ".number_format($value['iva'], 2),1,1,'L');
 
             if($value['type']=='Compra'){
-                $tot_buy = $tot_buy + $value['subtotal'];           
+                $tot_buy = $tot_buy + $value['subtotal'];
+                $iva_buy = $iva_buy + $value['iva'];          
             }
             else if($value['type']=='Venta'){
                 $tot_sale = $tot_sale + $value['subtotal'];
+                $iva_sale = $iva_sale + $value['iva'];
             }
+            
 
         }
         $total_net = $tot_sale - $tot_buy;
-
-        $iva_sale = $tot_sale * 0.16;
-        $iva_buy = $tot_buy * 0.16;
 
         $this->Ln(6);
         $this->Cell(130);
